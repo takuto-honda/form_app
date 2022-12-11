@@ -1,3 +1,11 @@
+<?php
+session_start();
+$pageFlag = 0;
+if(!empty($_POST['btn_confirm'])) {
+  $pageFlag = 1;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -7,12 +15,13 @@
   <title>お問い合わせフォーム</title>
 </head>
 <body>
-<form action="contact.php" method="POST">
+  <!-- 入力画面 -->
+  <form action="contact.php" method="POST">
     <label for="your_name">氏名</label>
-    <input type="text" id="your_name" name="name" value="<?php if(!empty($_POST["your_name"])) {echo $_POST["your_name"];}?>">
+    <input type="text" id="your_name" name="your_name" value="<?php if(!empty($_POST["your_name"])) {echo $_POST["your_name"];}?>">
     <br>
     <label for="email">メールアドレス</label>
-    <input type="text" id="email" name="name" value="<?php if(!empty($_POST["email"])) {echo $_POST["email"];}?>">
+    <input type="text" id="email" name="email" value="<?php if(!empty($_POST["email"])) {echo $_POST["email"];}?>">
     <br>
     <input type="radio" name="gender" id="gender1" value="0" 
     <?php if(isset($_POST['gender']) && $_POST['gender'] === '0' )
@@ -35,12 +44,47 @@
     </select>
     <br>
     <label for="contact">お問い合わせ内容</label>
-    <textarea id="contact" row="3" name="contact"><?php if(!empty($_POST['contact'])){echo h($_POST['contact']) ;} ?></textarea>
+    <textarea id="contact" row="3" name="contact"><?php if(!empty($_POST['contact'])){echo $_POST['contact'] ;} ?></textarea>
     <br>
     <input type="checkbox" id="caution" name="caution" value="1">
     <label for="caution">注意事項にチェックする</label>
     <br>
     <input type="submit" name="btn_confirm" value="確認する">
   </form>
+
+  <!-- 確認画面 -->
+  <?php if($pageFlag === 1): ?>
+    <form action="input.php" method="POST">
+      氏名
+      <?php echo $_POST['your_name'] ;?>
+      <br>
+      メールアドレス
+      <?php echo $_POST['email'] ;?>
+      <br>
+      性別
+      <?php 
+        if($_POST['gender'] === '0'){ echo '男性'; }
+        if($_POST['gender'] === '1'){ echo '女性'; }
+      ?>
+      <br>
+      年齢
+      <?php
+        if($_POST['age'] === '1'){ echo '〜19歳' ;}
+        if($_POST['age'] === '2'){ echo '20歳〜29歳' ;}
+        if($_POST['age'] === '3'){ echo '30歳〜39歳' ;}
+        if($_POST['age'] === '4'){ echo '40歳〜49歳' ;}
+        if($_POST['age'] === '5'){ echo '50歳〜59歳' ;}
+        if($_POST['age'] === '6'){ echo '60歳〜' ;}
+      ?>
+
+      <br>
+      お問い合わせ内容
+      <?php echo $_POST['contact'] ;?>
+      <br>
+
+      <input type="submit" name="back" value="戻る">
+      <input type="submit" name="btn_submit" value="送信する">
+    </form>
+  <?php endif; ?>
 </body>
 </html>
