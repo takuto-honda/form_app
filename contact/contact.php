@@ -131,6 +131,10 @@ if(!empty($_POST['btn_submit'])) {
   <?php if($pageFlag === 2) : ?>
     <?php if($_POST['csrf'] === $_SESSION['csrfToken']) :?>
       <form action="contact.php">
+        <?php 
+           require '../db/insert.php';
+           insertContact($_POST);
+        ?>
         送信が完了しました。
         <br>
         <?php unset($_SESSION['csrfToken']); ?>
