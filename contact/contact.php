@@ -1,11 +1,12 @@
 <?php
-// echo '<pre>';var_dump($_POST);echo '</pre>';exit;
 session_start();
+require '../validation/validation.php';
+$errors = validation($_POST);
 $pageFlag = 0;
 if(!empty($_POST['top'])) {
   $pageFlag = 0;
 }
-if(!empty($_POST['btn_confirm'])) {
+if(!empty($_POST['btn_confirm']) && empty($errors)) {
   $pageFlag = 1;
 }
 if(!empty($_POST['btn_submit'])) {
@@ -24,12 +25,21 @@ if(!empty($_POST['btn_submit'])) {
 <body>
   <!-- 入力画面 -->
   <?php if($pageFlag === 0): ?>
+    <?php if(!empty($errors) && !empty($_POST['btn_confirm']) ) : ?>
+    <?php echo '<ul>' ;?>
+    <?php 
+      foreach($errors as $error){
+        echo '<li>' . $error . '</li>' ;
+      } 
+    ?>
+    <?php echo '</ul>' ; ?>
+    <?php endif ;?>
     <form action="contact.php" method="POST">
       <label for="your_name">氏名</label>
-      <input type="text" id="your_name" name="your_name" value="<?php if(!empty($_POST["your_name"])) {echo $_POST["your_name"];}?>">
+      <input type="text" id="your_name" name="your_name" value="<?php if(!empty($_POST["your_name"])) {echo $_POST["your_name"];}?>" required>
       <br>
       <label for="email">メールアドレス</label>
-      <input type="text" id="email" name="email" value="<?php if(!empty($_POST["email"])) {echo $_POST["email"];}?>">
+      <input type="text" id="email" name="email" value="<?php if(!empty($_POST["email"])) {echo $_POST["email"];}?>" required>
       <br>
       <input type="radio" name="gender" id="gender1" value="0" 
       <?php if(isset($_POST['gender']) && $_POST['gender'] === '0' )
